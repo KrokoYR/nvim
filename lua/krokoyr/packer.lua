@@ -8,9 +8,14 @@ return require('packer').startup(function(use)
   use 'wbthomason/packer.nvim'
 
   use {
-	  'nvim-telescope/telescope.nvim', tag = '0.1.4',
+	  'nvim-telescope/telescope.nvim', tag = '0.1.5',
 	  -- or                            , branch = '0.1.x',
 	  requires = { {'nvim-lua/plenary.nvim'} }
+  }
+
+  use {
+      'nvim-telescope/telescope-fzf-native.nvim',
+      run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
   }
 
   use({
@@ -47,6 +52,7 @@ return require('packer').startup(function(use)
   use("nvim-treesitter/nvim-treesitter-context");
   use("lvimuser/lsp-inlayhints.nvim")
   use("nvim-lua/lsp-status.nvim")
+  use {"chrisgrieser/nvim-genghis", requires = "stevearc/dressing.nvim"}
   use {
       'nvim-lualine/lualine.nvim',
       requires = { 'nvim-tree/nvim-web-devicons', opt = true }

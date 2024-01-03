@@ -43,6 +43,30 @@ lsp.set_preferences({
 local lsp_status = require('lsp-status')
 lsp_status.register_progress()
 
+local lspconfig = require('lspconfig')
+lspconfig.rust_analyzer.setup({
+  on_attach = lsp_status.on_attach,
+  capabilities = lsp_status.capabilities
+})
+
+require("lualine").setup {
+  sections = {
+    lualine_c = {
+      'filename',
+      function()
+          local status = lsp_status.status()
+          -- Replace undesired character(s) here
+          status = status:gsub("🇻", "")
+          if (status == "") then
+              return "S"
+          end
+          return status
+      end,
+    },
+  }
+}
+
+-- This should be in the end of the file
 lsp.on_attach(function(client, bufnr)
   local opts = {buffer = bufnr, remap = false}
 
@@ -62,29 +86,4 @@ lsp.setup()
 vim.diagnostic.config({
     virtual_text = true
 })
-
-local lspconfig = require('lspconfig')
-lspconfig.rust_analyzer.setup({
-  on_attach = lsp_status.on_attach,
-  capabilities = lsp_status.capabilities
-})
-
-require("lualine").setup {
-  sections = {
-    lualine_c = {
-      'filename',  -- Add other components as needed
-      function()
-          if #vim.lsp.buf_get_clients() > 0 then
-              local status = lsp_status.status()
-              -- Replace undesired character(s) here
-              status = status:gsub("🇻", ""):gsub("^%s*(.-)%s*$", "%1")
-              return status
-          end
-          return "S"
-      end,
-      -- ... any other components for lualine_c
-    },
-    -- any other lualine sections or configurations...
-  }
-}
 
