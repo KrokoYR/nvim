@@ -5,7 +5,8 @@ vim.cmd.packadd('packer.nvim')
 
 return require('packer').startup(function(use)
     -- Packer can manage itself
-    use 'wbthomason/packer.nvim'
+    use "wbthomason/packer.nvim"
+    use "nvim-lua/plenary.nvim"
 
     use {
         'nvim-telescope/telescope.nvim', tag = '0.1.5',
@@ -44,6 +45,11 @@ return require('packer').startup(function(use)
         end
     })
 
+    use({
+        "iamcco/markdown-preview.nvim",
+        run = function() vim.fn["mkdp#util#install"]() end,
+    })
+
     use {
         'nvim-treesitter/nvim-treesitter',
         run = function()
@@ -51,7 +57,11 @@ return require('packer').startup(function(use)
             ts_update()
         end, }
     use("nvim-treesitter/playground")
-    use("theprimeagen/harpoon")
+    use {
+        "ThePrimeagen/harpoon",
+        branch = "harpoon2",
+        requires = { { "nvim-lua/plenary.nvim" } }
+    }
     use("theprimeagen/refactoring.nvim")
     use("preservim/tagbar")
     use("mbbill/undotree")

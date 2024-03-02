@@ -49,6 +49,15 @@ lspconfig.rust_analyzer.setup({
     capabilities = lsp_status.capabilities
 })
 
+lspconfig.sourcekit.setup {
+    root_dir = lspconfig.util.root_pattern(
+        '.git',
+        'Package.swift',
+        'compile_commands.json'
+    ),
+    cmd = { 'sourcekit-lsp' }
+}
+
 require("lualine").setup {
     sections = {
         lualine_c = {
