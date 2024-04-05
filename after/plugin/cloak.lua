@@ -3,6 +3,7 @@ require("cloak").setup({
     cloak_character = "*",
     -- The applied highlight group (colors) on the cloaking, see `:h highlight`.
     highlight_group = "Comment",
+    cloak_telescope = true,
     patterns = {
         {
             -- Match any file starting with ".env".

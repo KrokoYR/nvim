@@ -20,6 +20,8 @@ return require('packer').startup(function(use)
             'mfussenegger/nvim-dap',
         },
     }
+    use { 'dense-analysis/ale' }
+    use 'bufbuild/vim-buf'
 
     use {
         'nvim-telescope/telescope-fzf-native.nvim',

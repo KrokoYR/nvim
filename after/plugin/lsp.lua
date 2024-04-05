@@ -1,3 +1,10 @@
+-- ALE Configuration
+vim.g.ale_linters = {
+    proto = { 'buf-lint' },
+}
+vim.g.ale_lint_on_text_changed = 'never'
+vim.g.ale_linters_explicit = 1
+
 local ih = require('lsp-inlayhints')
 ih.setup()
 
@@ -9,6 +16,7 @@ lsp.ensure_installed({
     'tsserver',
     'rust_analyzer',
     'gopls',
+    'kotlin_language_server',
 })
 
 -- Fix Undefined global 'vim'
@@ -50,18 +58,8 @@ lspconfig.rust_analyzer.setup({
     settings = {
         ["rust-analyzer"] = {
             cargo = {
-                buildScripts = {
-                    enable = true,
-                },
-            },
-            procMacro = {
-                enable = true,
-            },
-            diagnostics = {
-                experimental = {
-                    enable = true
-                }
-            },
+                target = "aarch64-linux-android"
+            }
         }
     }
 })
