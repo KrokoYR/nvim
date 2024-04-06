@@ -57,8 +57,25 @@ lspconfig.rust_analyzer.setup({
     capabilities = lsp_status.capabilities,
     settings = {
         ["rust-analyzer"] = {
+            check = {
+                command = "clippy",
+            },
             cargo = {
-                target = "aarch64-linux-android"
+                allFeatures = true,
+                loadOutDirsFromCheck = true,
+                runBuildScripts = true,
+            },
+            checkOnSave = {
+                allFeatures = true,
+                command = "clippy",
+                extraArgs = {
+                    "--",
+                    "--no-deps",
+                    "-Dclippy::correctness",
+                    "-Dclippy::complexity",
+                    "-Wclippy::perf",
+                    "-Wclippy::pedantic",
+                },
             }
         }
     }

@@ -100,7 +100,8 @@ return require('packer').startup(function(use)
     }
 
     use("folke/zen-mode.nvim")
-    use("github/copilot.vim")
+    -- Temporary turn off copilot in order to become a better coder
+    -- use("github/copilot.vim")
     use("eandrju/cellular-automaton.nvim")
     use("laytan/cloak.nvim")
 end)
