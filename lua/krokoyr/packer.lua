@@ -7,6 +7,9 @@ return require('packer').startup(function(use)
     -- Packer can manage itself
     use "wbthomason/packer.nvim"
     use "nvim-lua/plenary.nvim"
+    use "google/vim-maktaba"
+    use "google/vim-glaive"
+    use "google/vim-codefmt"
 
     use {
         'nvim-telescope/telescope.nvim', tag = '0.1.5',
@@ -101,7 +104,7 @@ return require('packer').startup(function(use)
 
     use("folke/zen-mode.nvim")
     -- Temporary turn off copilot in order to become a better coder
-    -- use("github/copilot.vim")
+    use("github/copilot.vim")
     use("eandrju/cellular-automaton.nvim")
     use("laytan/cloak.nvim")
 end)
