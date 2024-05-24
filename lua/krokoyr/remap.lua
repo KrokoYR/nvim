@@ -32,16 +32,6 @@ vim.keymap.set("i", "<C-c>", "<Esc>")
 vim.keymap.set("n", "Q", "<nop>")
 vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
 vim.keymap.set("n", "<leader>f", vim.lsp.buf.format)
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = "proto",
-    callback = function()
-        local format_cmd = "clang-format -i" -- or another command if you're using a different formatter
-        vim.keymap.set("n", "<leader>f", function()
-            vim.cmd("silent ! " .. format_cmd .. " " .. vim.fn.expand("%"))
-            vim.cmd("edit!") -- reload the buffer
-        end, { buffer = true })
-    end
-})
 
 vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
 vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
