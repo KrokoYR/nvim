@@ -107,6 +107,21 @@ require("lualine").setup {
     }
 }
 
+-- Add Pyright configuration
+lspconfig.pyright.setup({
+    on_attach = lsp_status.on_attach,
+    capabilities = lsp_status.capabilities,
+    settings = {
+        python = {
+            analysis = {
+                typeCheckingMode = "strict",
+                autoSearchPaths = true,
+                useLibraryCodeForTypes = true,
+            }
+        }
+    }
+})
+
 -- This should be in the end of the file
 lsp.on_attach(function(_client, bufnr)
     local opts = { buffer = bufnr, remap = false }
