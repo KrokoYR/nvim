@@ -13,7 +13,6 @@ local lsp = require("lsp-zero")
 lsp.preset("recommended")
 
 lsp.ensure_installed({
-    'tsserver',
     'rust_analyzer',
     'gopls',
     'kotlin_language_server',
@@ -81,14 +80,49 @@ lspconfig.rust_analyzer.setup({
     }
 })
 
-lspconfig.sourcekit.setup {
-    root_dir = lspconfig.util.root_pattern(
-        '.git',
-        'Package.swift',
-        'compile_commands.json'
-    ),
-    cmd = { 'sourcekit-lsp' }
+local api = require("typescript-tools.api")
+require("typescript-tools").setup {
+    handlers = {
+        ["textDocument/publishDiagnostics"] = api.filter_diagnostics(
+        -- Ignore 'This may be converted to an async function' diagnostics.
+            { 80006 }
+        ),
+        ['textDocument/definition'] = function(err, result, method, ...)
+            -- In order to debug uncomment:
+            -- local result_str = vim.inspect(result)
+            -- vim.notify("LSP definition result: " .. result_str, vim.log.levels.INFO)
+
+            if vim.islist(result) and #result > 1 then
+                local filtered_result = {}
+                for _, v in pairs(result) do
+                    if (
+                            (v.uri and string.match(v.uri, '%@types/react/index.d.ts') == nil)
+                            or (v.targetUri and string.match(v.targetUri, '%@types/react/index.d.ts') == nil)
+                        ) then
+                        table.insert(filtered_result, v)
+                    end
+                end
+
+                return vim.lsp.handlers['textDocument/definition'](err, filtered_result, method, ...)
+            end
+
+            vim.lsp.handlers['textDocument/definition'](err, result, method, ...)
+        end
+    },
 }
+
+lspconfig.gopls.setup({
+    settings = {
+        gopls = {
+            analyses = {
+                unusedparams = true,
+            },
+            staticcheck = true,
+            gofumpt = true,
+        },
+    },
+})
+
 
 require("lualine").setup {
     sections = {
@@ -149,3 +183,5 @@ vim.api.nvim_create_autocmd('BufWritePre', {
     command = 'silent! EslintFixAll',
     group = vim.api.nvim_create_augroup('MyAutocmdsJavaScripFormatting', {}),
 })
+
+require("flutter-tools").setup {} -- use defaults

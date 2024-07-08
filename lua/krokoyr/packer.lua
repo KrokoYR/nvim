@@ -17,6 +17,20 @@ return require('packer').startup(function(use)
         requires = { { 'nvim-lua/plenary.nvim' } }
     }
     use {
+        'akinsho/flutter-tools.nvim',
+        requires = {
+            'nvim-lua/plenary.nvim',
+            'stevearc/dressing.nvim', -- optional for vim.ui.select
+        },
+    }
+    use {
+        "pmizio/typescript-tools.nvim",
+        requires = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+        config = function()
+            require("typescript-tools").setup {}
+        end,
+    }
+    use {
         'scalameta/nvim-metals',
         requires = {
             'nvim-lua/plenary.nvim',
@@ -103,7 +117,6 @@ return require('packer').startup(function(use)
     }
 
     use("folke/zen-mode.nvim")
-    -- Temporary turn off copilot in order to become a better programmer
     -- use("github/copilot.vim")
     use("eandrju/cellular-automaton.nvim")
     use("laytan/cloak.nvim")
