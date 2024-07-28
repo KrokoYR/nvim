@@ -11,6 +11,12 @@ function R(name)
     require("plenary.reload").reload_module(name)
 end
 
+vim.lsp.buf.format {
+    filter = function(client)
+        return client.name ~= "tsserver"
+    end
+}
+
 autocmd('TextYankPost', {
     group = yank_group,
     pattern = '*',

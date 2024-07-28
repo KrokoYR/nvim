@@ -15,7 +15,6 @@ lsp.preset("recommended")
 lsp.ensure_installed({
     'rust_analyzer',
     'gopls',
-    'kotlin_language_server',
 })
 
 -- Fix Undefined global 'vim'
@@ -80,37 +79,6 @@ lspconfig.rust_analyzer.setup({
     }
 })
 
-local api = require("typescript-tools.api")
-require("typescript-tools").setup {
-    handlers = {
-        ["textDocument/publishDiagnostics"] = api.filter_diagnostics(
-        -- Ignore 'This may be converted to an async function' diagnostics.
-            { 80006 }
-        ),
-        ['textDocument/definition'] = function(err, result, method, ...)
-            -- In order to debug uncomment:
-            -- local result_str = vim.inspect(result)
-            -- vim.notify("LSP definition result: " .. result_str, vim.log.levels.INFO)
-
-            if vim.islist(result) and #result > 1 then
-                local filtered_result = {}
-                for _, v in pairs(result) do
-                    if (
-                            (v.uri and string.match(v.uri, '%@types/react/index.d.ts') == nil)
-                            or (v.targetUri and string.match(v.targetUri, '%@types/react/index.d.ts') == nil)
-                        ) then
-                        table.insert(filtered_result, v)
-                    end
-                end
-
-                return vim.lsp.handlers['textDocument/definition'](err, filtered_result, method, ...)
-            end
-
-            vim.lsp.handlers['textDocument/definition'](err, result, method, ...)
-        end
-    },
-}
-
 lspconfig.gopls.setup({
     settings = {
         gopls = {
@@ -122,7 +90,6 @@ lspconfig.gopls.setup({
         },
     },
 })
-
 
 require("lualine").setup {
     sections = {
@@ -156,6 +123,11 @@ lspconfig.pyright.setup({
     }
 })
 
+lspconfig.tsserver.setup {
+    filetypes = { "typescript", "typescriptreact", "typescript.tsx" },
+    cmd = { "typescript-language-server", "--stdio" }
+}
+
 -- This should be in the end of the file
 lsp.on_attach(function(_, bufnr)
     local opts = { buffer = bufnr, remap = false }
@@ -178,10 +150,10 @@ vim.diagnostic.config({
     virtual_text = true
 })
 
-vim.api.nvim_create_autocmd('BufWritePre', {
-    pattern = { '*.tsx', '*.ts', '*.jsx', '*.js' },
-    command = 'silent! EslintFixAll',
-    group = vim.api.nvim_create_augroup('MyAutocmdsJavaScripFormatting', {}),
-})
+-- vim.api.nvim_create_autocmd('BufWritePre', {
+--     pattern = { '*.tsx', '*.ts', '*.jsx', '*.js' },
+--     command = 'silent! EslintFixAll',
+--     group = vim.api.nvim_create_augroup('MyAutocmdsJavaScripFormatting', {}),
+-- })
 
 require("flutter-tools").setup {} -- use defaults
