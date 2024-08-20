@@ -79,17 +79,21 @@ lspconfig.rust_analyzer.setup({
     }
 })
 
-lspconfig.gopls.setup({
-    settings = {
-        gopls = {
-            analyses = {
-                unusedparams = true,
-            },
-            staticcheck = true,
-            gofumpt = true,
-        },
-    },
-})
+require('go').setup {
+    lsp_cfg = false
+}
+local cfg = require 'go.lsp'.config() -- config() return the go.nvim gopls setup
+
+require('lspconfig').gopls.setup(cfg)
+
+lspconfig.sourcekit.setup {
+    root_dir = lspconfig.util.root_pattern(
+        '.git',
+        'Package.swift',
+        'compile_commands.json'
+    ),
+    cmd = { 'sourcekit-lsp' }
+}
 
 require("lualine").setup {
     sections = {
@@ -156,4 +160,4 @@ vim.diagnostic.config({
 --     group = vim.api.nvim_create_augroup('MyAutocmdsJavaScripFormatting', {}),
 -- })
 
-require("flutter-tools").setup {} -- use defaults
+-- require("flutter-tools").setup {} -- use defaults
