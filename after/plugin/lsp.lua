@@ -15,7 +15,6 @@ lsp.preset("recommended")
 lsp.ensure_installed({
     'tsserver',
     'rust_analyzer',
-    'gopls',
     'kotlin_language_server',
 })
 
@@ -80,6 +79,13 @@ lspconfig.rust_analyzer.setup({
         }
     }
 })
+
+require('go').setup {
+    lsp_cfg = false
+}
+local cfg = require 'go.lsp'.config() -- config() return the go.nvim gopls setup
+
+require('lspconfig').gopls.setup(cfg)
 
 lspconfig.sourcekit.setup {
     root_dir = lspconfig.util.root_pattern(

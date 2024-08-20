@@ -54,7 +54,8 @@ return require('packer').startup(function(use)
         "iamcco/markdown-preview.nvim",
         run = function() vim.fn["mkdp#util#install"]() end,
     })
-
+    use 'ray-x/go.nvim'
+    use 'ray-x/guihua.lua'
     use {
         'nvim-treesitter/nvim-treesitter',
         run = function()
