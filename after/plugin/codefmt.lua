@@ -27,6 +27,13 @@ vim.api.nvim_create_autocmd('BufWritePre', {
     end
 })
 
+vim.api.nvim_create_autocmd('BufWritePre', {
+    pattern = { '*.ts', '*.tsx', '*.js', '*.jsx' }, -- Formats .ts, .tsx, .js, and .jsx files
+    callback = function()
+        -- Ignore formatting
+    end
+})
+
 local format_sync_grp = vim.api.nvim_create_augroup("GoFormat", {})
 vim.api.nvim_create_autocmd("BufWritePre", {
     pattern = "*.go",

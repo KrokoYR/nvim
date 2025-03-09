@@ -10,6 +10,7 @@ return require('packer').startup(function(use)
     use "google/vim-maktaba"
     use "google/vim-glaive"
     use "google/vim-codefmt"
+    use 'mfussenegger/nvim-dap'
 
     use {
         'nvim-telescope/telescope.nvim', tag = '0.1.5',

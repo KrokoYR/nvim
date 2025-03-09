@@ -15,6 +15,7 @@ lsp.preset("recommended")
 lsp.ensure_installed({
     'rust_analyzer',
     'gopls',
+    'clangd',
 })
 
 -- Fix Undefined global 'vim'
@@ -79,8 +80,25 @@ lspconfig.rust_analyzer.setup({
     }
 })
 
+lspconfig.clangd.setup({
+    on_attach = lsp_status.on_attach,
+    capabilities = lsp_status.capabilities,
+    cmd = { 'clangd', '--background-index', '--clang-tidy', '--log=verbose' },
+    filetypes = { 'c', 'cpp', 'objc', 'objcpp' },
+    root_dir = lspconfig.util.root_pattern('compile_commands.json', '.git'),
+    init_options = {
+        clangdFileStatus = true,
+        fallbackFlags = { '-std=c++17' },
+    }
+})
+
+-- setup your go.nvim
+-- make sure lsp_cfg is disabled
+require("mason").setup()
+require("mason-lspconfig").setup()
 require('go').setup {
     lsp_cfg = false
+    -- other setups...
 }
 local cfg = require 'go.lsp'.config() -- config() return the go.nvim gopls setup
 
@@ -127,9 +145,24 @@ lspconfig.pyright.setup({
     }
 })
 
-lspconfig.tsserver.setup {
+lspconfig.eslint.setup({
+    on_attach = function(_, bufnr)
+        vim.api.nvim_create_autocmd("BufWritePre", {
+            buffer = bufnr,
+            command = "EslintFixAll",
+        })
+    end,
+})
+
+lspconfig.ts_ls.setup {
     filetypes = { "typescript", "typescriptreact", "typescript.tsx" },
-    cmd = { "typescript-language-server", "--stdio" }
+    cmd = { "typescript-language-server", "--stdio" },
+    on_attach = function(client, bufnr)
+        client.resolved_capabilities.document_formatting = false
+        client.server_capabilities.documentFormattingProvider = false
+        lsp_status.on_attach(client, bufnr)
+    end,
+    provideFormatter = false,
 }
 
 -- This should be in the end of the file
